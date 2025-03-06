@@ -5,7 +5,7 @@ using UnityEngine;
 public class SpawnZombies : MonoBehaviour
 {
     public float spawnTimer;
-    private float currnetSpawnTimer;
+    public float currnetSpawnTimer;
     
     [SerializeField] Transform[] spawnFloor;
     void Update()

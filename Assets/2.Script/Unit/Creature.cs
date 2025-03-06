@@ -21,5 +21,10 @@ public class Creature : Stat
         ani.SetBool(animationStatus.ToString() , true);
     }
 
+    protected void Move(Vector3 movePos)
+    {
+        transform.position += movePos * speed * Time.deltaTime;
+    }
+
 
 }

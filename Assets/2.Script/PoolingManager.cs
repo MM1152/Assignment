@@ -7,7 +7,7 @@ using UnityEngine;
 public class PoolingManager : MonoBehaviour
 {
     public enum PoolType {
-        None , ZombieMelee , Bullet
+        None , ZombieMelee , Bullet , Damage
     }
 
     Dictionary<PoolType , GameObject> datas = new Dictionary<PoolType , GameObject>(); 
@@ -33,7 +33,6 @@ public class PoolingManager : MonoBehaviour
 
 
     public GameObject ShowPool(PoolType poolType) {
-        Debug.Log(poolType);
         if(!pools.ContainsKey(poolType)) {
             Debug.Log("Fail To find pool type");
             return null;

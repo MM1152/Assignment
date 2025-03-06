@@ -1,16 +1,21 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PushAble : MonoBehaviour
 {
-    Zombie pushAbleUnit;
-    void OnTriggerStay2D(Collider2D collision)
+
+    void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.gameObject.CompareTag("Zombie")) {
-            collision.GetComponent<Zombie>().pushAble = true;
+            Zombie collsionZombie = collision.GetComponent<Zombie>();
+            collsionZombie.pushAble = true;
+            Zombie.currentPushAbleZombie = collsionZombie;
         }
     }
+
     void OnTriggerExit2D(Collider2D collision)
     {
         if(collision.gameObject.CompareTag("Zombie")) {
