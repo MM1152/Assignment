@@ -42,13 +42,14 @@ public class Zombie : Creature
     public Vector2 bonusPushPower;
 
     [SerializeField] Zombie behindZombie;
-
+    private Vector3 rayStartPos;
     public override void Awake()
     {
         base.Awake();
 
         gameObject.tag = "Zombie";
         rg = GetComponent<Rigidbody2D>();
+       
     }
 
     void OnEnable()
@@ -67,12 +68,17 @@ public class Zombie : Creature
         }
     }
 
-    void FixedUpdate()
+    void Update()
     {
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.left , 0.001f , gameObject.layer);
+        rayStartPos = transform.position + Vector3.up * 0.5f + Vector3.left * 0.7f ;
+        RaycastHit2D hit = Physics2D.Raycast(rayStartPos , Vector2.left , 0.3f , gameObject.layer);
+        Debug.DrawRay(rayStartPos, Vector2.left * 0.3f , Color.red);
         if(hit.collider == null) {
             base.Move(Vector3.left);
         }   
+        else {
+            Debug.Log(hit.collider.name);
+        }
         
     }
     void OnCollisionStay2D(Collision2D collision)
