@@ -6,7 +6,7 @@ public class SpawnZombies : MonoBehaviour
 {
     public float spawnTimer;
     public float currnetSpawnTimer;
-    
+    public int count;
     [SerializeField] Transform[] spawnFloor;
     void Update()
     {
@@ -19,12 +19,13 @@ public class SpawnZombies : MonoBehaviour
 
         currnetSpawnTimer = spawnTimer;
         GameObject zombie = PoolingManager.Instance.ShowPool(PoolingManager.PoolType.ZombieMelee);
+
         if(zombie == null) {
-            Debug.Log("Fail to Load Zombie");
             return;
         }
+
         int spawnindex = Random.Range(0 , 2);
-        
+        zombie.name = zombie.name;
         zombie.transform.SetParent(spawnFloor[spawnindex]);
         zombie.transform.position = spawnFloor[spawnindex].transform.Find("SpawnPos").transform.position;
         zombie.SetActive(true);

@@ -116,8 +116,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.2, y: 0.46495473}
-  m_Size: {x: 0.39450067, y: 1.1062086}
+  m_Offset: {x: -0.2, y: 0.5}
+  m_Size: {x: 0.5, y: 1.2}
   m_Direction: 0
 --- !u!114 &-7172012295715764222
 MonoBehaviour:
@@ -134,14 +134,18 @@ MonoBehaviour:
   hp: 100
   damage: 0
   speed: 1
+  damageCanvas: {fileID: 0}
   jumpCoolTime: 2
   pushAble: 0
+  pushTime: 0.5
   maxVelocity: {x: 0, y: 0}
-  jumpPower: {x: 0, y: 230}
-  pushPower: {x: 20, y: 0}
+  jumpPower: {x: 0, y: 270}
+  pushPower: {x: 170, y: 0}
   boostPoser: {x: -20, y: 0}
   bonusPushPower: {x: 0, y: 0}
   behindZombie: {fileID: 0}
+  underZombie: {fileID: 0}
+  push: 0
 --- !u!1 &2094693183665648150
 GameObject:
   m_ObjectHideFlags: 0

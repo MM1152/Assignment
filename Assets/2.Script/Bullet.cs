@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Android.Types;
 using UnityEngine;
 
 public class Bullet : MonoBehaviour
@@ -22,6 +23,8 @@ public class Bullet : MonoBehaviour
         transform.position += (Vector3)direction * speed * Time.deltaTime;
         holdingTime += Time.deltaTime;
         
+        
+
         if(holdingTime >= 3f) PoolingManager.Instance.ReturnPool(PoolingManager.PoolType.Bullet , this.gameObject);
     }
 

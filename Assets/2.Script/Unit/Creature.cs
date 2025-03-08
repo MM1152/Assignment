@@ -4,27 +4,16 @@ using UnityEngine;
 
 public class Creature : Stat
 {
-    // 좀비같은 경우에 Rigidbody Mass값 조절 필요할듯
-    // 바닥 , 2층 , 3층 구분
-    Animator ani;
-
-    public enum AnimationStatus {
-        None, IsAttacking , IsDead , IsIdle
+    public virtual void Update(){
+        Die();
     }
 
-    public virtual void Awake()
-    {
-        ani = GetComponent<Animator>();
+    protected void Die(){
+        if (hp <= 0) {
+            if(this.GetType() == typeof(Zombie)) {
+                PoolingManager.Instance.ReturnPool(PoolingManager.PoolType.ZombieMelee , this.gameObject);
+            }
+            
+        }
     }
-
-    public virtual void PlayAnimation(AnimationStatus animationStatus){
-        ani.SetBool(animationStatus.ToString() , true);
-    }
-
-    protected void Move(Vector3 movePos)
-    {
-        transform.position += movePos * speed * Time.deltaTime;
-    }
-
-
 }
