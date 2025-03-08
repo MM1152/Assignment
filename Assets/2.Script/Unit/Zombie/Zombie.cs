@@ -1,12 +1,5 @@
 using System.Collections;
-using System.Collections.Generic;
-using Unity.Collections;
-using Unity.IO.LowLevel.Unsafe;
-using Unity.VisualScripting;
-using UnityEditor;
-using UnityEditor.PackageManager;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 public class Zombie : Creature
 {
@@ -27,7 +20,7 @@ public class Zombie : Creature
     public Vector2 bonusPushPower;
 
     [SerializeField] Zombie behindZombie;
-    [SerializeField] Zombie underZombie;
+
     private Vector3 leftStartRay;
     private Vector3 rightStartRay;
     private Vector3 downStartRay;
@@ -51,14 +44,7 @@ public class Zombie : Creature
     
     protected void Move()
     {
-       /*
-        if( rg.velocity.y <= 0 && rg.velocity.y >= -5f && !push) {
-            rg.velocity = new Vector2(-1 * speed , rg.velocity.y);
-        }
-        */
-        
         transform.position += Vector3.left * Time.deltaTime * speed;
-        
     }
  
     void FixedUpdate()
@@ -67,29 +53,30 @@ public class Zombie : Creature
         rightStartRay = transform.position + Vector3.up * 0.7f + Vector3.right * 0.06f;
         downStartRay = transform.position + Vector3.down * 0.1f + Vector3.left * 0.4f ;
 
-
         RaycastHit2D leftHit = Physics2D.Raycast(leftStartRay , Vector2.left , 0.05f , layerMask : 1 << gameObject.layer /*| 1 << LayerMask.NameToLayer("Box")*/);
         RaycastHit2D rightHit = Physics2D.Raycast(rightStartRay , Vector2.right , 0.3f , layerMask : 1 << gameObject.layer);
-        RaycastHit2D downHit = Physics2D.Raycast(downStartRay , Vector2.down , 0.5f , layerMask : 1 << gameObject.layer);
+        RaycastHit2D downHit = Physics2D.Raycast(downStartRay , Vector2.down , 0.05f , layerMask : 1 << gameObject.layer);
 
         Debug.DrawRay(rightStartRay, Vector2.right * 0.3f , Color.red);
         Debug.DrawRay(leftStartRay, Vector2.left * 0.05f , Color.red);
-        Debug.DrawRay(downStartRay , Vector2.down * 0.5f , Color.red);
+        Debug.DrawRay(downStartRay , Vector2.down * 0.05f , Color.red);
 
-        if(leftHit.collider == null || !leftHit.collider.CompareTag("Zombie")) Move();
+        if(leftHit.collider == null || !leftHit.collider.CompareTag("Zombie") && !push) Move();
         else if(leftHit.collider.CompareTag("Zombie"))  {
             Clime(leftHit.collider.gameObject);
         }            
         
         if(rightHit.collider != null) SetBehindZombie(rightHit.collider.gameObject);
         else behindZombie = null;
-        
-        
+
+        if(downHit.collider == null) rg.mass = 50f;
+        else rg.mass = 1f;
         if(rg.velocity.y > 2) {
             rg.velocity = new Vector2(0f , rg.velocity.y);
+            if(rg.velocity.y > 5) {
+                rg.velocity = Vector2.zero;
+            }
         }
-
-        if(pushAble) Debug.Log($"pushAble rg velocity {rg.velocity}"  );
     }
 
     void OnCollisionStay2D(Collision2D collision)
@@ -100,10 +87,7 @@ public class Zombie : Creature
 
             Push(contact.normal);
             Boost(contact.normal.y);
-
         }
-
-        
     }
     #region Around Zombie
 
@@ -116,15 +100,12 @@ public class Zombie : Creature
     void Clime(GameObject gameObject)
     {
         // 앞에 좀비가 있을떄 점프 시도
-        if(rg.velocity.y >= 0) currnetJumpTime -= Time.deltaTime;
+        if(rg.velocity.y >= 0 && !pushAble) currnetJumpTime -= Time.deltaTime;
         
         if(currnetJumpTime <= 0){
             currnetJumpTime = jumpCoolTime;
             rg.AddForce(jumpPower);
         }
-        // if(behindZombie != null) {
-        //     currnetJumpTime = jumpCoolTime;
-        // }
     }
 
     void Push(Vector2 nomal)
@@ -145,7 +126,10 @@ public class Zombie : Creature
         {
             behindZombie.Push();
         }
-        rg.AddForce(pushPower /*+ bonusPushPowerz*/);
+        if(push) return;
+        StartCoroutine(WaitPush());
+        push = true;
+
     }
 
     void Boost(float nomalY)
@@ -156,5 +140,15 @@ public class Zombie : Creature
         }
     }
     #endregion
+
+    IEnumerator WaitPush(){
+        Vector3 startPos = transform.position;
+        for(float i = 0f; i < 1f ; i += 0.05f) {
+            transform.position = Vector2.Lerp(startPos , startPos + Vector3.right * 0.8f , i);
+            yield return new WaitForSeconds(0.01f);
+        }
+       
+        push = false;
+    }
 }
 

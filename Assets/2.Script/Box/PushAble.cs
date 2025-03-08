@@ -24,7 +24,7 @@ public class PushAble : MonoBehaviour
             
 
             if(currnetZombie != null && currnetZombie == checkZombie) {
-                currnetZombie.bonusPushPower += Vector2.right * 20f;
+                currnetZombie.bonusPushPower += Vector2.right * 10f;
             }
             else if(currnetZombie != null){
                 currnetZombie.bonusPushPower = Vector2.zero;
